@@ -5,17 +5,24 @@ it("return 1 when you draw number between 1 and 1", () => {
 })
 
 it("throw exception when property min is not a number", () => {
-    function isMinPropNumber() {
-        randomNumber(5, undefined);
+    function isMinNotANumber() {
+        randomNumber("5", 7)
     }
-
-    expect(isMinPropNumber).toThrow()
+    expect(isMinNotANumber).toThrow()
 })
 
 it("throw exception when property max is not a number", () => {
-    function isMaxPropNumber() {
-        randomNumber(undefined, 10);
+    function isMaxNotANumber() {
+        randomNumber(5, "7")
+    }
+    expect(isMaxNotANumber).toThrow()
+})
+
+it("throw exception when property min is greater than property max", () => {
+
+    function isMinGreaterThanMax() {
+        randomNumber(3, 1)
     }
 
-    expect(isMaxPropNumber).toThrow()
+    expect(isMinGreaterThanMax).toThrow()
 })
