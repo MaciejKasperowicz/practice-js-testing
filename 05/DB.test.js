@@ -13,7 +13,7 @@ describe("DB", () => {
             return db.insert(data1)
                 .then(result => expect(isNumber(result)).toBe(true))
             // .catch(err => expect(err.message).toBe("ID can be only number!"))
-        })
+        });
         it("should reject when data.id isn't a number", () => {
             // expect.assertions(1);
             const db = new DB();
@@ -45,8 +45,8 @@ describe("DB", () => {
             return expect(db.insert(data1)
                 .then(() => db.insert(data2)))
                 .rejects.toThrow('ID can\'t be duplicated!')
-        })
-    })
+        });
+    });
 
     describe("select", () => {
         it("should return row when selected id exists", () => {
@@ -56,7 +56,7 @@ describe("DB", () => {
 
             return db.select(2)
                 .then(result => expect(result).toBe(data2))
-        })
+        });
 
         it("should reject when selected id not found", () => {
             const data1 = { a: 11, b: 22, id: 1 };
@@ -67,8 +67,29 @@ describe("DB", () => {
                 .rejects.toThrow("ID not found");
             // return (db.select(3))
             //     .catch(err => expect(err.message).toBe("ID not found"))
-        })
-    })
+        });
+    });
 
+    describe("remove", () => {
+        it("should remove item when exists", () => {
+            const data1 = { a: 11, b: 22, id: 1 };
+            const data2 = { a: 55, b: 11, id: 2 };
+            const db = new DB([data1, data2]);
+
+            return db.remove(2)
+                .then(result => expect(result).toBe('Item was remove!'))
+        });
+
+        it("should reject when item not exist", () => {
+            const data1 = { a: 11, b: 22, id: 1 };
+            const data2 = { a: 55, b: 11, id: 2 };
+            const db = new DB([data1, data2]);
+
+            return expect(db.remove(3))
+                .rejects.toThrow("Item not exist!");
+            // return (db.select(3))
+            //     .catch(err => expect(err.message).toBe("ID not found"))
+        });
+    });
 })
 

@@ -52,7 +52,7 @@ export default class DB {
                 const lengthAfterFilter = this._rows.length;
 
                 if (lengthBeforeFilter === lengthAfterFilter) {
-                    reject('Item not exist!');
+                    reject(new Error('Item not exist!'));
                 } else {
                     resolve('Item was remove!');
                 }
