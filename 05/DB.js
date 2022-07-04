@@ -1,22 +1,25 @@
 export default class DB {
-    constructor() {
-        this._rows = [];
+    constructor(db = []) {
+        // this._rows = [];
+        this._rows = db
     }
 
     insert(data) {
         return new Promise((resolve, reject) => {
-            if(data.id) {
-                if(typeof data.id !== 'number') {
-                    this.async(reject,'ID can be only number!');
+            if (data.id) {
+                if (typeof data.id !== 'number') {
+                    this.async(reject, new Error('ID can be only number!'));
+                    // this.async(reject, 'ID can be only number!');
                     return null; // stop function
-                } else if(this._rows.some(item => item.id === data.id)) {
-                    this.async(reject, 'ID can\'t be duplicated!');
+                } else if (this._rows.some(item => item.id === data.id)) {
+                    this.async(reject, new Error('ID can\'t be duplicated!'));
                     return null; // stop function
                 }
             }
 
             this.async(() => {
-                if(!data.id) {
+                if (!data.id) {
+                    // console.log("nie ma data.id");
                     data.id = this._rows.reduce((acc, item) => {
                         return acc <= item.id ? item.id + 1 : acc;
                     }, 1);
@@ -24,7 +27,7 @@ export default class DB {
 
                 this._rows.push(data);
                 resolve(data)
-            }); 
+            });
         });
     }
 
@@ -32,10 +35,10 @@ export default class DB {
         return new Promise((resolve, reject) => {
             this.async(() => {
                 const [row = null] = this._rows.filter(item => item.id === id);
-                if(row) {
+                if (row) {
                     resolve(row);
                 } else {
-                    reject('ID not found');
+                    reject(new Error('ID not found'));
                 }
             });
         });
@@ -47,8 +50,8 @@ export default class DB {
                 const lengthBeforeFilter = this._rows.length;
                 this._rows = this._rows.filter(item => item.id !== id);
                 const lengthAfterFilter = this._rows.length;
-                
-                if(lengthBeforeFilter === lengthAfterFilter) {
+
+                if (lengthBeforeFilter === lengthAfterFilter) {
                     reject('Item not exist!');
                 } else {
                     resolve('Item was remove!');
@@ -59,24 +62,24 @@ export default class DB {
 
     update(data) {
         return new Promise((resolve, reject) => {
-            if(!data.id) {
+            if (!data.id) {
                 this.async(reject, 'ID have to be set!');
             } else {
                 this.async(() => {
                     let updated = null;
                     this._rows = this._rows.map(item => {
-                        if(item.id === data.id) {
+                        if (item.id === data.id) {
                             updated = data
                             return updated;
                         }
-            
+
                         return item;
                     });
 
-                    if(updated) {
+                    if (updated) {
                         resolve(updated);
                     } else {
-                        reject('ID not found!');   
+                        reject('ID not found!');
                     }
                 });
             }
@@ -89,21 +92,32 @@ export default class DB {
                 this._rows = [];
                 resolve(true);
             });
-            
+
         })
     }
 
     getRows() {
         return new Promise(resolve => {
             this.async(() => {
-                resolve(this._rows);
+                resolve(this._rows, console.log(this._rows));
+
             });
         })
     }
 
     async(callback, ...params) {
+        // console.log("callback", callback)
+        // console.log("...params", ...params)
         setTimeout(() => {
             callback(...params);
         }, Math.random() * 100);
     }
+    // async(callback, params) {
+    //     console.log("callback", callback)
+    //     console.log("...params", params)
+    //     setTimeout(() => {
+    //         callback(params);
+    //     }, Math.random() * 100);
+    // }
+
 }
