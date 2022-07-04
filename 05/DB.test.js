@@ -87,8 +87,41 @@ describe("DB", () => {
 
             return expect(db.remove(3))
                 .rejects.toThrow("Item not exist!");
-            // return (db.select(3))
-            //     .catch(err => expect(err.message).toBe("ID not found"))
+        });
+    });
+
+    describe("update", () => {
+        it("should update item when id is set and exists", () => {
+            const data1 = { a: 11, b: 22, id: 1 };
+            const data2 = { a: 55, b: 11, id: 2 };
+
+            const db = new DB([data1, data2]);
+            const dataToUpdate = { a: 33, b: 66, id: 1 }
+
+            return db.update(dataToUpdate)
+                .then(result => expect(result).toBe(dataToUpdate))
+        });
+
+        it("should reject when id is not set", () => {
+            const data1 = { a: 11, b: 22, id: 1 };
+            const data2 = { a: 55, b: 11, id: 2 };
+
+            const db = new DB([data1, data2]);
+            const dataToUpdateWithoutID = { a: 33, b: 66 };
+
+            return expect(db.update(dataToUpdateWithoutID))
+                .rejects.toThrow("ID have to be set!");
+        });
+
+        it("should reject when id is set but not found ", () => {
+            const data1 = { a: 11, b: 22, id: 1 };
+            const data2 = { a: 55, b: 11, id: 2 };
+
+            const db = new DB([data1, data2]);
+            const dataToUpdateWithWrongID = { a: 33, b: 66, id: 3 };
+
+            return expect(db.update(dataToUpdateWithWrongID))
+                .rejects.toThrow("ID not found!");
         });
     });
 })
