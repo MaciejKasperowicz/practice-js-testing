@@ -106,18 +106,8 @@ export default class DB {
     }
 
     async(callback, ...params) {
-        // console.log("callback", callback)
-        // console.log("...params", ...params)
         setTimeout(() => {
             callback(...params);
         }, Math.random() * 100);
     }
-    // async(callback, params) {
-    //     console.log("callback", callback)
-    //     console.log("...params", params)
-    //     setTimeout(() => {
-    //         callback(params);
-    //     }, Math.random() * 100);
-    // }
-
 }

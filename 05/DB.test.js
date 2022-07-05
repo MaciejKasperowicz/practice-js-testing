@@ -124,5 +124,17 @@ describe("DB", () => {
                 .rejects.toThrow("ID not found!");
         });
     });
+
+    describe("return true when truncate db", () => {
+        const data1 = { a: 11, b: 22, id: 1 };
+        const data2 = { a: 55, b: 11, id: 2 };
+
+        const db = new DB([data1, data2]);
+
+        db.truncate()
+            .then(result => expect(result).toBe(true))
+        // .then(() => db.insert(data1))
+        // .then(() => db.getRows())
+    })
 })
 
