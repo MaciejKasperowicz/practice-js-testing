@@ -100,6 +100,7 @@ export default class DB {
         return new Promise(resolve => {
             this.async(() => {
                 resolve(this._rows, console.log(this._rows));
+                // resolve(this._rows);
 
             });
         })
